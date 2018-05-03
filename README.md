@@ -11,7 +11,7 @@ HTTP Basic authentication:
 
     main() async {
       var client = http_auth.BasicAuthClient('user', 'passwd');
-      var response = client.get('http://httpbin.org/digest-auth/auth/user/passwd');
+      var response = client.get('http://httpbin.org/basic-auth/user/passwd');
     }
 ```
 
