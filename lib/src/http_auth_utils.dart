@@ -157,7 +157,7 @@ class DigestAuth {
   String _nonce = null;
   String _opaque = null;
 
-  int _nc = 1; // request counter
+  int _nc = 0; // request counter
   String _cnonce = null; // client-generated; should change for each request
 
   DigestAuth(this.username, this.password) {}
@@ -176,6 +176,7 @@ class DigestAuth {
     var authValues = computeResponse(method, url.path, '',
         _algorithm, _qop, _opaque, _realm, _cnonce, _nonce, _nc, username, password);
     final authValuesString = authValues.entries
+        .where((e) => e.value != null)
         .map((e) => [e.key, '="', e.value, '"'].join(''))
         .toList()
         .join(', ');
