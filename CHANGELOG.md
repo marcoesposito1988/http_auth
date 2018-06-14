@@ -1,3 +1,7 @@
+## 0.1.3
+
+- Upgraded dependencies
+
 ## 0.1.2
 
 - Fixed handling of requests with a body.
