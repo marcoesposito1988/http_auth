@@ -1,3 +1,7 @@
+## 0.1.2
+
+- Fixed handling of requests with a body.
+
 ## 0.1.1
 
 - Fixed nonce counter.
