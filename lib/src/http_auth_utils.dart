@@ -33,27 +33,15 @@ String md5Hash(String data) {
   return digest;
 }
 
-
-
 // from http_retry
 /// Returns a copy of [original].
-http.StreamedRequest _copyStreamedRequest(http.BaseRequest original) {
-  var request = new http.StreamedRequest(original.method, original.url);
-  request.contentLength = original.contentLength;
-  request.followRedirects = original.followRedirects;
-  request.headers.addAll(original.headers);
-  request.maxRedirects = original.maxRedirects;
-  request.persistentConnection = original.persistentConnection;
-
-  return request;
-}
-
 http.Request _copyNormalRequest(http.Request original) {
   var request = new http.Request(original.method, original.url);
   request.followRedirects = original.followRedirects;
   request.headers.addAll(original.headers);
   request.maxRedirects = original.maxRedirects;
   request.persistentConnection = original.persistentConnection;
+  request.body = original.body;
 
   return request;
 }
@@ -61,10 +49,8 @@ http.Request _copyNormalRequest(http.Request original) {
 http.BaseRequest copyRequest(http.BaseRequest original) {
   if (original is http.Request) {
     return _copyNormalRequest(original);
-  } else  if (original is http.StreamedRequest) {
-    return _copyStreamedRequest(original);
   } else {
-    throw UnimplementedError;
+    throw UnimplementedError('cannot handle yet requests of type ${original.runtimeType}');
   }
 }
 
