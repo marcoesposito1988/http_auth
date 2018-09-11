@@ -29,7 +29,7 @@ class BasicAuthClient extends http.BaseClient {
   {}
 
   static String _getAuthString(username, password) {
-    final token = BASE64.encode(LATIN1.encode('${username}:${password}'));
+    final token = base64.encode(latin1.encode('${username}:${password}'));
 
     final authstr = 'Basic ' +token.trim();
 
