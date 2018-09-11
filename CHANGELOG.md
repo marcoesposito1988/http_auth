@@ -1,3 +1,7 @@
+## 0.2.0
+
+- Upgraded for Dart 2.0 stable
+
 ## 0.1.3
 
 - Upgraded dependencies
