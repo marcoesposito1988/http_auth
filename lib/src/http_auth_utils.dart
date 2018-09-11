@@ -170,7 +170,7 @@ class DigestAuth {
     return authString;
   }
 
-  bool initFromAuthorizationHeader(String authInfo) {
+  void initFromAuthorizationHeader(String authInfo) {
 
     Map<String, String> values = splitAuthenticateHeader(authInfo);
     _algorithm = values['algorithm'];
