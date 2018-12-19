@@ -1,3 +1,7 @@
+## 0.2.1
+
+- Removed dependency from cryptoutils
+
 ## 0.2.0
 
 - Upgraded for Dart 2.0 stable
