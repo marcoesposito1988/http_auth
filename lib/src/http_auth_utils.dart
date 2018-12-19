@@ -4,8 +4,8 @@
 // that can be found in the LICENSE file.
 
 import 'dart:convert';
+import 'package:convert/convert.dart';
 import 'dart:math' as math;
-import "package:cryptoutils/cryptoutils.dart";
 import 'package:crypto/crypto.dart' as crypto;
 import 'package:http/http.dart' as http;
 
@@ -152,7 +152,8 @@ class DigestAuth {
     math.Random rnd = new math.Random();
 
     List<int> values = new List<int>.generate(16, (i) => rnd.nextInt(256));
-    return CryptoUtils.bytesToHex(values);
+
+    return hex.encode(values);
   }
 
   String getAuthString(String method, Uri url) {
