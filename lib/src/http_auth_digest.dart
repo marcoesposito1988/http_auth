@@ -7,10 +7,8 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'http_auth_utils.dart' as utils;
 
-
 /// Http client holding a username and password to be used for Digest authentication
 class DigestAuthClient extends http.BaseClient {
-
   final http.Client _inner;
 
   final utils.DigestAuth _auth;
@@ -20,12 +18,12 @@ class DigestAuthClient extends http.BaseClient {
   /// Constructs a new [BasicAuthClient] which will use the provided [username]
   /// and [password] for all subsequent requests.
   DigestAuthClient(String username, String password, {inner})
-      : _auth = new utils.DigestAuth(username, password)
-      , _inner = inner == null ? new http.Client() : inner
-  {}
+      : _auth = new utils.DigestAuth(username, password),
+        _inner = inner == null ? new http.Client() : inner {}
 
   _setAuthString(http.BaseRequest request) {
-    request.headers['Authorization'] = _auth.getAuthString(request.method, request.url);
+    request.headers['Authorization'] =
+        _auth.getAuthString(request.method, request.url);
   }
 
   Future<http.StreamedResponse> send(http.BaseRequest request) async {

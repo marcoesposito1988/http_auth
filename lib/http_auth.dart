@@ -8,4 +8,3 @@ library http_auth;
 
 export 'src/http_auth_basic.dart';
 export 'src/http_auth_digest.dart';
-

@@ -9,7 +9,6 @@ import 'dart:math' as math;
 import 'package:crypto/crypto.dart' as crypto;
 import 'package:http/http.dart' as http;
 
-
 Map<String, String> splitAuthenticateHeader(String header) {
   if (header == null || !header.startsWith('Digest ')) {
     return null; // TODO exception?
@@ -50,12 +49,12 @@ http.BaseRequest copyRequest(http.BaseRequest original) {
   if (original is http.Request) {
     return _copyNormalRequest(original);
   } else {
-    throw UnimplementedError('cannot handle yet requests of type ${original.runtimeType}');
+    throw UnimplementedError(
+        'cannot handle yet requests of type ${original.runtimeType}');
   }
 }
 
 // Digest auth
-
 
 String _formatNonceCount(int nc) {
   return nc.toRadixString(16).padLeft(8, '0');
@@ -132,7 +131,6 @@ Map<String, String> computeResponse(
 }
 
 class DigestAuth {
-
   String username;
   String password;
 
@@ -160,8 +158,8 @@ class DigestAuth {
     _cnonce = _computeNonce();
     _nc += 1;
     // after the first request we have the nonce, so we can provide credentials
-    var authValues = computeResponse(method, url.path, '',
-        _algorithm, _qop, _opaque, _realm, _cnonce, _nonce, _nc, username, password);
+    var authValues = computeResponse(method, url.path, '', _algorithm, _qop,
+        _opaque, _realm, _cnonce, _nonce, _nc, username, password);
     final authValuesString = authValues.entries
         .where((e) => e.value != null)
         .map((e) => [e.key, '="', e.value, '"'].join(''))
@@ -172,7 +170,6 @@ class DigestAuth {
   }
 
   void initFromAuthorizationHeader(String authInfo) {
-
     Map<String, String> values = splitAuthenticateHeader(authInfo);
     _algorithm = values['algorithm'];
     _qop = values['qop'];

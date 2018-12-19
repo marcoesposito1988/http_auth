@@ -30,7 +30,6 @@ void main() async {
       var response = await client.get(url);
       expect(response.statusCode == 200, isTrue);
     });
-
   });
 
   group('httpbin Digest Auth', () {
@@ -55,7 +54,6 @@ void main() async {
       var response = await client.get(url);
       expect(response.statusCode == 200, isTrue);
     });
-
   });
 
   group('jigsaw Digest Auth', () {
