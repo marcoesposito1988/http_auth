@@ -1,3 +1,7 @@
+## 0.2.2
+
+- Updated http dependency requirement
+
 ## 0.2.1
 
 - Removed dependency from cryptoutils
