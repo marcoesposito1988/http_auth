@@ -62,7 +62,7 @@ String _formatNonceCount(int nc) {
 
 String _computeHA1(String realm, String algorithm, String username,
     String password, String nonce, String cnonce) {
-  var ha1 = null;
+  var ha1;
 
   if (algorithm == null || algorithm == 'MD5') {
     final token1 = "$username:$realm:$password";
@@ -94,7 +94,7 @@ Map<String, String> computeResponse(
 
   final HA1 = _computeHA1(realm, algorithm, username, password, nonce, cnonce);
 
-  var HA2 = null;
+  var HA2;
 
   if (qop == 'auth-int') {
     final bodyHash = md5Hash(body);
@@ -135,14 +135,14 @@ class DigestAuth {
   String password;
 
   // must get from first response
-  String _algorithm = null;
-  String _qop = null;
-  String _realm = null;
-  String _nonce = null;
-  String _opaque = null;
+  String _algorithm;
+  String _qop;
+  String _realm;
+  String _nonce;
+  String _opaque;
 
   int _nc = 0; // request counter
-  String _cnonce = null; // client-generated; should change for each request
+  String _cnonce; // client-generated; should change for each request
 
   DigestAuth(this.username, this.password) {}
 
