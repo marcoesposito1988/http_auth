@@ -1,3 +1,7 @@
+## 0.2.3
+
+- Fixed warnings
+
 ## 0.2.2
 
 - Updated http dependency requirement
