@@ -1,3 +1,5 @@
+[![pub package](https://img.shields.io/pub/v/http_auth.svg)](https://pub.dartlang.org/packages/http_auth)
+
 # http_auth
 
 An [`http`](https://pub.dartlang.org/packages/http) middleware for HTTP authentication (Basic/Digest).
