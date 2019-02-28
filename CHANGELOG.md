@@ -1,3 +1,7 @@
+## 0.2.4
+
+- Fixed parsing of Auth header (thanks to @graknol)
+
 ## 0.2.3
 
 - Fixed warnings
