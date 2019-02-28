@@ -17,7 +17,7 @@ Map<String, String> splitAuthenticateHeader(String header) {
 
   var ret = new Map<String, String>();
 
-  final components = header.split(', ');
+  final components = header.split(',').map((token) => token.trim());
   for (var component in components) {
     final kv = component.split('=');
     ret[kv[0]] = kv.getRange(1, kv.length).join('=').replaceAll('"', '');
