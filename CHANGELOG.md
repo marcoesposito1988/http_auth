@@ -1,3 +1,7 @@
+## 0.2.5
+
+- Updated syntax
+
 ## 0.2.4
 
 - Fixed parsing of Auth header (thanks to @graknol)
