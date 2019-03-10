@@ -19,7 +19,7 @@ class DigestAuthClient extends http.BaseClient {
   /// and [password] for all subsequent requests.
   DigestAuthClient(String username, String password, {inner})
       : _auth = new utils.DigestAuth(username, password),
-        _inner = inner == null ? new http.Client() : inner {}
+        _inner = inner == null ? new http.Client() : inner;
 
   _setAuthString(http.BaseRequest request) {
     request.headers['Authorization'] =

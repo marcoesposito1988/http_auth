@@ -144,7 +144,7 @@ class DigestAuth {
   int _nc = 0; // request counter
   String _cnonce; // client-generated; should change for each request
 
-  DigestAuth(this.username, this.password) {}
+  DigestAuth(this.username, this.password);
 
   String _computeNonce() {
     math.Random rnd = new math.Random();
