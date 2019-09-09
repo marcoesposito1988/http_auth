@@ -157,8 +157,11 @@ class DigestAuth {
   String getAuthString(String method, Uri url) {
     _cnonce = _computeNonce();
     _nc += 1;
+    // if url has query parameters, append query to path
+    var path = url.hasQuery ? url.path + "?" + url.query : url.path;
+    
     // after the first request we have the nonce, so we can provide credentials
-    var authValues = computeResponse(method, url.path, '', _algorithm, _qop,
+    var authValues = computeResponse(method, path, '', _algorithm, _qop,
         _opaque, _realm, _cnonce, _nonce, _nc, username, password);
     final authValuesString = authValues.entries
         .where((e) => e.value != null)
