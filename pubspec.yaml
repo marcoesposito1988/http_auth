@@ -1,6 +1,6 @@
 name: http_auth
 description: Dart http middleware for HTTP Basic and Digest authentication
-version: 0.2.5
+version: 0.2.6
 homepage: https://github.com/marcoesposito1988/http_auth
 author: Marco Esposito <marcoesposito1988@gmail.com>
 

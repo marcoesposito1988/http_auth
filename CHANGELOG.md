@@ -1,3 +1,7 @@
+## 0.2.6
+
+- Added fix for URLs with a query (thanks to thuette for the implementation and Pacane for reporting the fix)
+
 ## 0.2.5
 
 - Updated syntax
