@@ -27,12 +27,6 @@ class DigestAuthClient extends http.BaseClient {
   }
 
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
-    // after the first request we can provide Auth info
-    if (_auth.isReady()) {
-      _setAuthString(request);
-      return _inner.send(request);
-    }
-
     final response = await _inner.send(request);
 
     if (response.statusCode == 401) {
