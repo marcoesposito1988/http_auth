@@ -15,7 +15,7 @@ Map<String, String> splitAuthenticateHeader(String header) {
   }
   header = header.substring(7); // remove 'Digest '
 
-  var ret = new Map<String, String>();
+  var ret = Map<String, String>();
 
   final components = header.split(',').map((token) => token.trim());
   for (var component in components) {
@@ -26,7 +26,7 @@ Map<String, String> splitAuthenticateHeader(String header) {
 }
 
 String md5Hash(String data) {
-  var content = new Utf8Encoder().convert(data);
+  var content = Utf8Encoder().convert(data);
   var md5 = crypto.md5;
   var digest = md5.convert(content).toString();
   return digest;
@@ -35,7 +35,7 @@ String md5Hash(String data) {
 // from http_retry
 /// Returns a copy of [original].
 http.Request _copyNormalRequest(http.Request original) {
-  var request = new http.Request(original.method, original.url);
+  var request = http.Request(original.method, original.url);
   request.followRedirects = original.followRedirects;
   request.headers.addAll(original.headers);
   request.maxRedirects = original.maxRedirects;
@@ -90,7 +90,7 @@ Map<String, String> computeResponse(
     int nc,
     String username,
     String password) {
-  var ret = new Map<String, String>();
+  var ret = Map<String, String>();
 
   final HA1 = _computeHA1(realm, algorithm, username, password, nonce, cnonce);
 
@@ -147,9 +147,9 @@ class DigestAuth {
   DigestAuth(this.username, this.password);
 
   String _computeNonce() {
-    math.Random rnd = new math.Random();
+    math.Random rnd = math.Random();
 
-    List<int> values = new List<int>.generate(16, (i) => rnd.nextInt(256));
+    List<int> values = List<int>.generate(16, (i) => rnd.nextInt(256));
 
     return hex.encode(values);
   }
