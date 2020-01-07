@@ -4,7 +4,9 @@
 // that can be found in the LICENSE file.
 
 import 'dart:async';
+
 import 'package:http/http.dart' as http;
+
 import 'http_auth_utils.dart' as utils;
 
 /// Http client holding a username and password to be used for Digest authentication
@@ -19,13 +21,9 @@ class DigestAuthClient extends http.BaseClient {
   /// and [password] for all subsequent requests.
   DigestAuthClient(String username, String password, {inner})
       : _auth = utils.DigestAuth(username, password),
-        _inner = inner == null ? http.Client() : inner;
+        _inner = inner ?? http.Client();
 
-  _setAuthString(http.BaseRequest request) {
-    request.headers['Authorization'] =
-        _auth.getAuthString(request.method, request.url);
-  }
-
+  @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
     final response = await _inner.send(request);
 
@@ -34,7 +32,8 @@ class DigestAuthClient extends http.BaseClient {
       final String authInfo = response.headers['www-authenticate'];
       _auth.initFromAuthorizationHeader(authInfo);
 
-      _setAuthString(newRequest);
+      newRequest.headers['Authorization'] =
+          _auth.getAuthString(newRequest.method, newRequest.url);
 
       return _inner.send(newRequest);
     }
@@ -43,6 +42,7 @@ class DigestAuthClient extends http.BaseClient {
     return response;
   }
 
+  @override
   void close() {
     _inner.close();
   }

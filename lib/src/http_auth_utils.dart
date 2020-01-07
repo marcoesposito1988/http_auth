@@ -4,8 +4,9 @@
 // that can be found in the LICENSE file.
 
 import 'dart:convert';
-import 'package:convert/convert.dart';
 import 'dart:math' as math;
+
+import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart' as crypto;
 import 'package:http/http.dart' as http;
 
@@ -15,7 +16,7 @@ Map<String, String> splitAuthenticateHeader(String header) {
   }
   header = header.substring(7); // remove 'Digest '
 
-  var ret = Map<String, String>();
+  var ret = <String, String>{};
 
   final components = header.split(',').map((token) => token.trim());
   for (var component in components) {
@@ -65,12 +66,12 @@ String _computeHA1(String realm, String algorithm, String username,
   var ha1;
 
   if (algorithm == null || algorithm == 'MD5') {
-    final token1 = "$username:$realm:$password";
+    final token1 = '$username:$realm:$password';
     ha1 = md5Hash(token1);
   } else if (algorithm == 'MD5-sess') {
-    final token1 = "$username:$realm:$password";
+    final token1 = '$username:$realm:$password';
     final md51 = md5Hash(token1);
-    final token2 = "$md51:$nonce:$cnonce";
+    final token2 = '$md51:$nonce:$cnonce';
     ha1 = md5Hash(token2);
   }
 
@@ -90,7 +91,7 @@ Map<String, String> computeResponse(
     int nc,
     String username,
     String password) {
-  var ret = Map<String, String>();
+  var ret = <String, String>{};
 
   final HA1 = _computeHA1(realm, algorithm, username, password, nonce, cnonce);
 
@@ -159,7 +160,7 @@ class DigestAuth {
     _nc += 1;
     // if url has query parameters, append query to path
     var path = url.hasQuery ? url.path + "?" + url.query : url.path;
-    
+
     // after the first request we have the nonce, so we can provide credentials
     var authValues = computeResponse(method, path, '', _algorithm, _qop,
         _opaque, _realm, _cnonce, _nonce, _nc, username, password);
