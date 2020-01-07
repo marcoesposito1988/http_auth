@@ -42,4 +42,8 @@ class DigestAuthClient extends http.BaseClient {
     // we should reach this point only with errors other than 401
     return response;
   }
+
+  void close() {
+    _inner.close();
+  }
 }
