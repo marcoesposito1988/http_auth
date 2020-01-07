@@ -1,3 +1,7 @@
+## 0.2.9
+
+- Code linting 
+
 ## 0.2.8
 
 - Call to inner `Client`'s `close()` was missing (thanks to @SiLeader) 
