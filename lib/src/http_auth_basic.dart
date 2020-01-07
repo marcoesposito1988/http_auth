@@ -44,4 +44,8 @@ class BasicAuthClient extends http.BaseClient {
 
     return _inner.send(request);
   }
+
+  void close() {
+    _inner.close();
+  }
 }
