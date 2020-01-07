@@ -99,11 +99,11 @@ Map<String, String> computeResponse(
 
   if (qop == 'auth-int') {
     final bodyHash = md5Hash(body);
-    final token2 = "$method:$path:$bodyHash";
+    final token2 = '$method:$path:$bodyHash';
     HA2 = md5Hash(token2);
   } else {
     // qop in [null, auth]
-    final token2 = "$method:$path";
+    final token2 = '$method:$path';
     HA2 = md5Hash(token2);
   }
 
@@ -121,10 +121,10 @@ Map<String, String> computeResponse(
   ret['algorithm'] = algorithm;
 
   if (qop == null) {
-    final token3 = "$HA1:$nonce:$HA2";
+    final token3 = '$HA1:$nonce:$HA2';
     ret['response'] = md5Hash(token3);
   } else if (qop == 'auth' || qop == 'auth-int') {
-    final token3 = "$HA1:$nonce:$nonceCount:$cnonce:$qop:$HA2";
+    final token3 = '$HA1:$nonce:$nonceCount:$cnonce:$qop:$HA2';
     ret['response'] = md5Hash(token3);
   }
 
@@ -148,9 +148,9 @@ class DigestAuth {
   DigestAuth(this.username, this.password);
 
   String _computeNonce() {
-    math.Random rnd = math.Random();
+    final rnd = math.Random();
 
-    List<int> values = List<int>.generate(16, (i) => rnd.nextInt(256));
+    final values = List<int>.generate(16, (i) => rnd.nextInt(256));
 
     return hex.encode(values);
   }
@@ -159,10 +159,10 @@ class DigestAuth {
     _cnonce = _computeNonce();
     _nc += 1;
     // if url has query parameters, append query to path
-    var path = url.hasQuery ? url.path + "?" + url.query : url.path;
+    final path = url.hasQuery ? url.path + '?' + url.query : url.path;
 
     // after the first request we have the nonce, so we can provide credentials
-    var authValues = computeResponse(method, path, '', _algorithm, _qop,
+    final authValues = computeResponse(method, path, '', _algorithm, _qop,
         _opaque, _realm, _cnonce, _nonce, _nc, username, password);
     final authValuesString = authValues.entries
         .where((e) => e.value != null)
@@ -174,7 +174,7 @@ class DigestAuth {
   }
 
   void initFromAuthorizationHeader(String authInfo) {
-    Map<String, String> values = splitAuthenticateHeader(authInfo);
+    final values = splitAuthenticateHeader(authInfo);
     _algorithm = values['algorithm'];
     _qop = values['qop'];
     _realm = values['realm'];
