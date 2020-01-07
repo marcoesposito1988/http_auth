@@ -1,3 +1,7 @@
+## 0.2.8
+
+- Call to inner `Client`'s `close()` was missing (thanks to @SiLeader) 
+
 ## 0.2.7
 
 - Added reauthentication after 401 (thanks to @kendfinger)
