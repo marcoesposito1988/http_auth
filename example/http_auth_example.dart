@@ -5,8 +5,8 @@
 
 import 'package:http_auth/http_auth.dart';
 
-main() {
-  var client = new DigestAuthClient("user", "passwd");
+void main() {
+  var client = DigestAuthClient('user', 'passwd');
 
   final url = 'http://httpbin.org/digest-auth/auth/user/passwd';
 

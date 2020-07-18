@@ -23,11 +23,11 @@ class BasicAuthClient extends http.BaseClient {
   ///
   /// Constructs a new [BasicAuthClient] which will use the provided [username]
   /// and [password] for all subsequent requests.
-  BasicAuthClient(this.username, this.password, {inner})
+  BasicAuthClient(this.username, this.password, {http.Client inner})
       : _authString = _getAuthString(username, password),
         _inner = inner ?? http.Client();
 
-  static String _getAuthString(username, password) {
+  static String _getAuthString(String username, String password) {
     final token = base64.encode(latin1.encode('${username}:${password}'));
 
     final authstr = 'Basic ' + token.trim();

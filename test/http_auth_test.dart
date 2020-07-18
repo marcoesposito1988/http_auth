@@ -16,16 +16,16 @@ void main() async {
 //    });
 
     test('HTTP', () async {
-      String url = 'http://eu.httpbin.org/basic-auth/user/passwd';
-      client = new BasicAuthClient("user", "passwd");
+      final url = 'http://eu.httpbin.org/basic-auth/user/passwd';
+      client = BasicAuthClient('user', 'passwd');
 
       var response = await client.get(url);
       expect(response.statusCode == 200, isTrue);
     });
 
     test('HTTPS', () async {
-      String url = 'https://eu.httpbin.org/basic-auth/user/passwd';
-      client = new BasicAuthClient("user", "passwd");
+      final url = 'https://eu.httpbin.org/basic-auth/user/passwd';
+      client = BasicAuthClient('user', 'passwd');
 
       var response = await client.get(url);
       expect(response.statusCode == 200, isTrue);
@@ -40,16 +40,16 @@ void main() async {
 //    });
 
     test('HTTP', () async {
-      String url = 'http://eu.httpbin.org/digest-auth/auth/user/passwd';
-      client = new DigestAuthClient("user", "passwd");
+      final url = 'http://eu.httpbin.org/digest-auth/auth/user/passwd';
+      client = DigestAuthClient('user', 'passwd');
 
       var response = await client.get(url);
       expect(response.statusCode == 200, isTrue);
     });
 
     test('HTTPS', () async {
-      String url = 'https://eu.httpbin.org/digest-auth/auth/user/passwd';
-      client = new DigestAuthClient("user", "passwd");
+      final url = 'https://eu.httpbin.org/digest-auth/auth/user/passwd';
+      client = DigestAuthClient('user', 'passwd');
 
       var response = await client.get(url);
       expect(response.statusCode == 200, isTrue);
@@ -64,16 +64,16 @@ void main() async {
 //    });
 
     test('HTTP', () async {
-      String url = 'http://jigsaw.w3.org/HTTP/Digest/';
-      client = new DigestAuthClient("guest", "guest");
+      final url = 'http://jigsaw.w3.org/HTTP/Digest/';
+      client = DigestAuthClient('guest', 'guest');
 
       var response = await client.get(url);
       expect(response.statusCode, 200);
     });
 
     test('HTTPS', () async {
-      String url = 'https://jigsaw.w3.org/HTTP/Digest/';
-      client = new DigestAuthClient("guest", "guest");
+      final url = 'https://jigsaw.w3.org/HTTP/Digest/';
+      client = DigestAuthClient('guest', 'guest');
 
       var response = await client.get(url);
       expect(response.statusCode, 200);

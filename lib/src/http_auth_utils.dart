@@ -63,19 +63,17 @@ String _formatNonceCount(int nc) {
 
 String _computeHA1(String realm, String algorithm, String username,
     String password, String nonce, String cnonce) {
-  var ha1;
-
   if (algorithm == null || algorithm == 'MD5') {
     final token1 = '$username:$realm:$password';
-    ha1 = md5Hash(token1);
+    return md5Hash(token1);
   } else if (algorithm == 'MD5-sess') {
     final token1 = '$username:$realm:$password';
     final md51 = md5Hash(token1);
     final token2 = '$md51:$nonce:$cnonce';
-    ha1 = md5Hash(token2);
+    return md5Hash(token2);
+  } else {
+    throw ArgumentError.value(algorithm, 'algorithm', 'Unsupported algorithm');
   }
-
-  return ha1;
 }
 
 Map<String, String> computeResponse(
@@ -93,18 +91,18 @@ Map<String, String> computeResponse(
     String password) {
   var ret = <String, String>{};
 
-  final HA1 = _computeHA1(realm, algorithm, username, password, nonce, cnonce);
+  final ha1 = _computeHA1(realm, algorithm, username, password, nonce, cnonce);
 
-  var HA2;
+  String ha2;
 
   if (qop == 'auth-int') {
     final bodyHash = md5Hash(body);
     final token2 = '$method:$path:$bodyHash';
-    HA2 = md5Hash(token2);
+    ha2 = md5Hash(token2);
   } else {
     // qop in [null, auth]
     final token2 = '$method:$path';
-    HA2 = md5Hash(token2);
+    ha2 = md5Hash(token2);
   }
 
   final nonceCount = _formatNonceCount(nc);
@@ -121,10 +119,10 @@ Map<String, String> computeResponse(
   ret['algorithm'] = algorithm;
 
   if (qop == null) {
-    final token3 = '$HA1:$nonce:$HA2';
+    final token3 = '$ha1:$nonce:$ha2';
     ret['response'] = md5Hash(token3);
   } else if (qop == 'auth' || qop == 'auth-int') {
-    final token3 = '$HA1:$nonce:$nonceCount:$cnonce:$qop:$HA2';
+    final token3 = '$ha1:$nonce:$nonceCount:$cnonce:$qop:$ha2';
     ret['response'] = md5Hash(token3);
   }
 
