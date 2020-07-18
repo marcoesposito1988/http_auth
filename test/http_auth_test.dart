@@ -4,6 +4,7 @@
 // that can be found in the LICENSE file.
 
 import 'package:http_auth/http_auth.dart';
+import 'package:http_auth/src/http_auth_negotiate.dart';
 import 'package:test/test.dart';
 import 'package:http/http.dart' as http;
 
@@ -76,6 +77,21 @@ void main() async {
       client = DigestAuthClient('guest', 'guest');
 
       var response = await client.get(url);
+      expect(response.statusCode, 200);
+    });
+  });
+
+  group('Auto negotiate test', () {
+    final digestUrl = 'https://jigsaw.w3.org/HTTP/Digest/';
+    final basicUrl = 'https://jigsaw.w3.org/HTTP/Basic/';
+    test('negotiate basic', () async {
+      final client = NegotiateAuthClient('guest', 'guest');
+      final response = await client.get(basicUrl);
+      expect(response.statusCode, 200);
+    });
+    test('negotiate digest', () async {
+      final client = NegotiateAuthClient('guest', 'guest');
+      final response = await client.get(digestUrl);
       expect(response.statusCode, 200);
     });
   });

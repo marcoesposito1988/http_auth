@@ -10,6 +10,13 @@ import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart' as crypto;
 import 'package:http/http.dart' as http;
 
+class HttpConstants {
+  static const headerWwwAuthenticate = 'www-authenticate';
+
+  static const authSchemeDigest = 'digest';
+  static const authSchemeBasic = 'basic';
+}
+
 Map<String, String> splitAuthenticateHeader(String header) {
   if (header == null || !header.startsWith('Digest ')) {
     return null; // TODO exception?
