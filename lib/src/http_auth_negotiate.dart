@@ -31,7 +31,8 @@ class NegotiateAuthClient extends http.BaseClient {
           _authClient = BasicAuthClient(_username, _password, inner: _inner);
           break;
         case HttpConstants.authSchemeDigest:
-          _authClient = DigestAuthClient(_username, _password, inner: _inner);
+          _authClient = DigestAuthClient(_username, _password,
+              inner: _inner, authenticationHeader: authHeader);
           break;
         default:
           throw StateError('Unsupported authenticate scheme $scheme');

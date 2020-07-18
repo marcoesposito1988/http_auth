@@ -12,6 +12,7 @@ import 'package:http/http.dart' as http;
 
 class HttpConstants {
   static const headerWwwAuthenticate = 'www-authenticate';
+  static const headerAuthorization = 'Authorization';
 
   static const authSchemeDigest = 'digest';
   static const authSchemeBasic = 'basic';
@@ -148,12 +149,11 @@ class DigestAuth {
   String _opaque;
 
   int _nc = 0; // request counter
-  String _cnonce; // client-generated; should change for each request
 
   DigestAuth(this.username, this.password);
 
   String _computeNonce() {
-    final rnd = math.Random();
+    final rnd = math.Random.secure();
 
     final values = List<int>.generate(16, (i) => rnd.nextInt(256));
 
@@ -161,7 +161,7 @@ class DigestAuth {
   }
 
   String getAuthString(String method, Uri url) {
-    _cnonce = _computeNonce();
+    final _cnonce = _computeNonce();
     _nc += 1;
     // if url has query parameters, append query to path
     final path = url.hasQuery ? url.path + '?' + url.query : url.path;
@@ -180,14 +180,15 @@ class DigestAuth {
 
   void initFromAuthorizationHeader(String authInfo) {
     final values = splitAuthenticateHeader(authInfo);
-    _algorithm = values['algorithm'];
-    _qop = values['qop'];
-    _realm = values['realm'];
-    _nonce = values['nonce'];
-    _opaque = values['opaque'];
+    _algorithm = values['algorithm'] ?? _algorithm;
+    _qop = values['qop'] ?? _qop;
+    _realm = values['realm'] ?? _realm;
+    _nonce = values['nonce'] ?? _nonce;
+    _opaque = values['opaque'] ?? _opaque;
+    _nc = 0;
   }
 
   bool isReady() {
-    return _nonce != null;
+    return _nonce != null && (_nc == 0 || _qop != null);
   }
 }

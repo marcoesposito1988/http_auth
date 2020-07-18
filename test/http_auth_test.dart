@@ -82,8 +82,8 @@ void main() async {
   });
 
   group('Auto negotiate test', () {
-    final digestUrl = 'https://jigsaw.w3.org/HTTP/Digest/';
-    final basicUrl = 'https://jigsaw.w3.org/HTTP/Basic/';
+    final digestUrl = 'http://jigsaw.w3.org/HTTP/Digest/';
+    final basicUrl = 'http://jigsaw.w3.org/HTTP/Basic/';
     test('negotiate basic', () async {
       final client = NegotiateAuthClient('guest', 'guest');
       final response = await client.get(basicUrl);
@@ -91,8 +91,36 @@ void main() async {
     });
     test('negotiate digest', () async {
       final client = NegotiateAuthClient('guest', 'guest');
-      final response = await client.get(digestUrl);
+      final response = await client.get(digestUrl + rand);
       expect(response.statusCode, 200);
     });
   });
+
+  group('Digest: Multiple requests', () {
+    test('negotiate digest', () async {
+      final count = _CountingHttpClient();
+      final url = 'http://httpbin.org/digest-auth/auth/foo/bar';
+      final client = NegotiateAuthClient('foo', 'bar', inner: count);
+      final response = await client.get(url);
+      expect(response.statusCode, 200);
+      expect(count.requestCount, 2);
+      // lets try a second request.
+      final response2 = await client.get(url);
+      expect(response2.statusCode, 200);
+      expect(count.requestCount, 3);
+    });
+  });
+}
+
+String get rand => '?t=${DateTime.now().millisecondsSinceEpoch}';
+
+class _CountingHttpClient extends http.BaseClient {
+  final _inner = http.Client();
+  int requestCount = 0;
+
+  @override
+  Future<http.StreamedResponse> send(http.BaseRequest request) {
+    requestCount++;
+    return _inner.send(request);
+  }
 }

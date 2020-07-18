@@ -19,20 +19,30 @@ class DigestAuthClient extends http.BaseClient {
   ///
   /// Constructs a new [BasicAuthClient] which will use the provided [username]
   /// and [password] for all subsequent requests.
-  DigestAuthClient(String username, String password, {http.Client inner})
+  DigestAuthClient(String username, String password,
+      {http.Client inner, String authenticationHeader})
       : _auth = utils.DigestAuth(username, password),
-        _inner = inner ?? http.Client();
+        _inner = inner ?? http.Client() {
+    if (authenticationHeader != null) {
+      _auth.initFromAuthorizationHeader(authenticationHeader);
+    }
+  }
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
+    if (_auth.isReady()) {
+      request.headers[utils.HttpConstants.headerAuthorization] =
+          _auth.getAuthString(request.method, request.url);
+    }
     final response = await _inner.send(request);
 
     if (response.statusCode == 401) {
       final newRequest = utils.copyRequest(request);
-      final authInfo = response.headers['www-authenticate'];
+      final authInfo =
+          response.headers[utils.HttpConstants.headerWwwAuthenticate];
       _auth.initFromAuthorizationHeader(authInfo);
 
-      newRequest.headers['Authorization'] =
+      newRequest.headers[utils.HttpConstants.headerAuthorization] =
           _auth.getAuthString(newRequest.method, newRequest.url);
 
       return _inner.send(newRequest);
