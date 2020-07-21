@@ -1,3 +1,9 @@
+## 0.3.0
+
+- Added NegotiateAuthClient that automatically detects the authentication method (thanks to @hpoul)
+- General linting (thanks to @hpoul)
+- Reorganized the tests for consistency 
+
 ## 0.2.9
 
 - Code linting 
