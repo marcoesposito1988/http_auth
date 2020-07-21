@@ -4,6 +4,8 @@
 
 An [`http`](https://pub.dartlang.org/packages/http) middleware for HTTP authentication (Basic/Digest).
 
+The method (Basic or Digest) can optionally be autodetected.
+
 ## Usage
 
 HTTP Basic authentication:
@@ -24,6 +26,17 @@ HTTP Digest authentication:
 
     main() async {
       var client = http_auth.DigestAuthClient('user', 'passwd');
+      var response = client.get('http://httpbin.org/digest-auth/auth/user/passwd');
+    }
+```
+
+Automatic detection of the protocol (Basic or Digest):
+
+```dart
+    import 'package:http_auth/http_auth.dart';
+
+    main() async {
+      var client = http_auth.NegotiateAuthClient('user', 'passwd');
       var response = client.get('http://httpbin.org/digest-auth/auth/user/passwd');
     }
 ```
