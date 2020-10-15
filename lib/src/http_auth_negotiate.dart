@@ -24,18 +24,18 @@ class NegotiateAuthClient extends http.BaseClient {
 
     if (response.statusCode == 401) {
       final authHeader = response.headers[HttpConstants.headerWwwAuthenticate];
-      final scheme =
-          authHeader.substring(0, authHeader.indexOf(' ')).toLowerCase();
+      final scheme = pickSchemeFromAuthenticateHeader(authHeader);
       switch (scheme) {
-        case HttpConstants.authSchemeBasic:
+        case AuthenticationScheme.Basic:
           _authClient = BasicAuthClient(_username, _password, inner: _inner);
           break;
-        case HttpConstants.authSchemeDigest:
+        case AuthenticationScheme.Digest:
           _authClient = DigestAuthClient(_username, _password,
               inner: _inner, authenticationHeader: authHeader);
           break;
         default:
-          throw StateError('Unsupported authenticate scheme $scheme');
+          throw StateError(
+              'Unsupported authenticate scheme in WWW-Authenticate header $authHeader');
       }
       final newRequest = copyRequest(request);
 

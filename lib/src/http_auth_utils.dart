@@ -18,6 +18,11 @@ class HttpConstants {
   static const authSchemeBasic = 'basic';
 }
 
+enum AuthenticationScheme {
+  Basic,
+  Digest,
+}
+
 Map<String, String> splitAuthenticateHeader(String header) {
   if (header == null || !header.startsWith('Digest ')) {
     return null; // TODO exception?
@@ -178,7 +183,7 @@ class DigestAuth {
     return authString;
   }
 
-  void initFromAuthorizationHeader(String authInfo) {
+  void initFromAuthenticateHeader(String authInfo) {
     final values = splitAuthenticateHeader(authInfo);
     _algorithm = values['algorithm'] ?? _algorithm;
     _qop = values['qop'] ?? _qop;
@@ -191,4 +196,19 @@ class DigestAuth {
   bool isReady() {
     return _nonce != null && (_nc == 0 || _qop != null);
   }
+}
+
+AuthenticationScheme pickSchemeFromAuthenticateHeader(String wwwAuthHeader) {
+  final components = wwwAuthHeader
+      .split(RegExp(r'[, ]'))
+      .where((s) => s.isNotEmpty)
+      .map((e) => e.toLowerCase())
+      .toList();
+  if (components.any((element) => element == HttpConstants.authSchemeDigest)) {
+    return AuthenticationScheme.Digest;
+  }
+  if (components.any((element) => element == HttpConstants.authSchemeBasic)) {
+    return AuthenticationScheme.Basic;
+  }
+  return null;
 }
