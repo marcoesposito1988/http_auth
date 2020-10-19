@@ -6,6 +6,7 @@
 import 'package:http/http.dart' as http;
 import 'package:http_auth/http_auth.dart';
 import 'package:http_auth/src/http_auth_negotiate.dart';
+import 'package:http_auth/src/http_auth_utils.dart';
 import 'package:test/test.dart';
 
 void main() async {
@@ -139,6 +140,99 @@ void main() async {
       final response2 = await client.get(url);
       expect(response2.statusCode, 200);
       expect(count.requestCount, 3);
+    });
+  });
+
+  group('Automatic negotiation, scheme picking', () {
+    test('Basic', () {
+      expect(pickSchemeFromAuthenticateHeader('Basic'),
+          AuthenticationScheme.Basic);
+      expect(pickSchemeFromAuthenticateHeader('Basic,Basic'),
+          AuthenticationScheme.Basic);
+      expect(pickSchemeFromAuthenticateHeader('basic'),
+          AuthenticationScheme.Basic);
+      expect(pickSchemeFromAuthenticateHeader('basic,Basic'),
+          AuthenticationScheme.Basic);
+      expect(pickSchemeFromAuthenticateHeader('Basic,somenoise'),
+          AuthenticationScheme.Basic);
+      expect(pickSchemeFromAuthenticateHeader('Basic,somenoise=randomstuff'),
+          AuthenticationScheme.Basic);
+      expect(pickSchemeFromAuthenticateHeader('Basic,,somenoise=randomstuff'),
+          AuthenticationScheme.Basic);
+      expect(pickSchemeFromAuthenticateHeader('Basic somenoise=randomstuff'),
+          AuthenticationScheme.Basic);
+      expect(pickSchemeFromAuthenticateHeader('somenoise=randomstuff,Basic'),
+          AuthenticationScheme.Basic);
+      expect(pickSchemeFromAuthenticateHeader('somenoise=randomstuff,,Basic'),
+          AuthenticationScheme.Basic);
+      expect(pickSchemeFromAuthenticateHeader('somenoise=randomstuff, ,Basic'),
+          AuthenticationScheme.Basic);
+      expect(pickSchemeFromAuthenticateHeader('somenoise=randomstuff Basic'),
+          AuthenticationScheme.Basic);
+      expect(pickSchemeFromAuthenticateHeader('negotiate,basic'),
+          AuthenticationScheme.Basic);
+      expect(
+          pickSchemeFromAuthenticateHeader(
+              'Negotiate,Basic realm="Keepass DAV data"'),
+          AuthenticationScheme.Basic);
+    });
+
+    test('Digest', () {
+      expect(pickSchemeFromAuthenticateHeader('Digest'),
+          AuthenticationScheme.Digest);
+      expect(pickSchemeFromAuthenticateHeader('Digest,somenoise'),
+          AuthenticationScheme.Digest);
+      expect(pickSchemeFromAuthenticateHeader('Digest,somenoise=randomstuff'),
+          AuthenticationScheme.Digest);
+      expect(pickSchemeFromAuthenticateHeader('Digest,,somenoise=randomstuff'),
+          AuthenticationScheme.Digest);
+      expect(pickSchemeFromAuthenticateHeader('Digest somenoise=randomstuff'),
+          AuthenticationScheme.Digest);
+      expect(pickSchemeFromAuthenticateHeader('negotiate,digest'),
+          AuthenticationScheme.Digest);
+    });
+
+    test('Digest over Basic', () {
+      expect(pickSchemeFromAuthenticateHeader('Digest,Basic'),
+          AuthenticationScheme.Digest);
+      expect(pickSchemeFromAuthenticateHeader('Basic,Digest'),
+          AuthenticationScheme.Digest);
+      expect(pickSchemeFromAuthenticateHeader('Digest,somenoise'),
+          AuthenticationScheme.Digest);
+      expect(pickSchemeFromAuthenticateHeader('Digest,somenoise=randomstuff'),
+          AuthenticationScheme.Digest);
+      expect(pickSchemeFromAuthenticateHeader('Digest,,somenoise=randomstuff'),
+          AuthenticationScheme.Digest);
+      expect(pickSchemeFromAuthenticateHeader('Digest somenoise=randomstuff'),
+          AuthenticationScheme.Digest);
+      expect(pickSchemeFromAuthenticateHeader('Digest,somenoise,Basic'),
+          AuthenticationScheme.Digest);
+      expect(
+          pickSchemeFromAuthenticateHeader(
+              'Digest,somenoise=randomstuff,Basic'),
+          AuthenticationScheme.Digest);
+      expect(
+          pickSchemeFromAuthenticateHeader(
+              'Digest,,somenoise=randomstuff,Basic'),
+          AuthenticationScheme.Digest);
+      expect(
+          pickSchemeFromAuthenticateHeader(
+              'Digest somenoise=randomstuff,,Basic'),
+          AuthenticationScheme.Digest);
+    });
+
+    test('None', () {
+      expect(pickSchemeFromAuthenticateHeader('Something'), null);
+      expect(pickSchemeFromAuthenticateHeader('Something,somenoise'), null);
+      expect(
+          pickSchemeFromAuthenticateHeader('Something,somenoise=randomstuff'),
+          null);
+      expect(
+          pickSchemeFromAuthenticateHeader('Something,,somenoise=randomstuff'),
+          null);
+      expect(
+          pickSchemeFromAuthenticateHeader('Something somenoise=randomstuff'),
+          null);
     });
   });
 }

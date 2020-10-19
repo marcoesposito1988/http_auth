@@ -24,7 +24,7 @@ class DigestAuthClient extends http.BaseClient {
       : _auth = utils.DigestAuth(username, password),
         _inner = inner ?? http.Client() {
     if (authenticationHeader != null) {
-      _auth.initFromAuthorizationHeader(authenticationHeader);
+      _auth.initFromAuthenticateHeader(authenticationHeader);
     }
   }
 
@@ -40,7 +40,7 @@ class DigestAuthClient extends http.BaseClient {
       final newRequest = utils.copyRequest(request);
       final authInfo =
           response.headers[utils.HttpConstants.headerWwwAuthenticate];
-      _auth.initFromAuthorizationHeader(authInfo);
+      _auth.initFromAuthenticateHeader(authInfo);
 
       newRequest.headers[utils.HttpConstants.headerAuthorization] =
           _auth.getAuthString(newRequest.method, newRequest.url);
