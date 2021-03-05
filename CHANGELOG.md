@@ -1,3 +1,7 @@
+## 0.3.2
+
+- Updated dependencies for compatibility with Flutter2
+
 ## 0.3.1
 
 - Made NegotiateAuthClient robust to repeated WWW-Authenticate headers in the server response (thanks to @jbash for 
