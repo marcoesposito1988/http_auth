@@ -21,7 +21,7 @@ void main() async {
       final url = 'http://eu.httpbin.org/basic-auth/user/passwd';
       client = BasicAuthClient('user', 'passwd');
 
-      var response = await client.get(url);
+      var response = await client.get(Uri.parse(url));
       expect(response.statusCode == 200, isTrue);
     });
 
@@ -29,7 +29,7 @@ void main() async {
       final url = 'https://eu.httpbin.org/basic-auth/user/passwd';
       client = BasicAuthClient('user', 'passwd');
 
-      var response = await client.get(url);
+      var response = await client.get(Uri.parse(url));
       expect(response.statusCode == 200, isTrue);
     });
 
@@ -37,7 +37,7 @@ void main() async {
       final url = 'http://jigsaw.w3.org/HTTP/Basic/';
       client = BasicAuthClient('guest', 'guest');
 
-      var response = await client.get(url);
+      var response = await client.get(Uri.parse(url));
       expect(response.statusCode, 200);
     });
 
@@ -45,7 +45,7 @@ void main() async {
       final url = 'https://jigsaw.w3.org/HTTP/Basic/';
       client = BasicAuthClient('guest', 'guest');
 
-      var response = await client.get(url);
+      var response = await client.get(Uri.parse(url));
       expect(response.statusCode, 200);
     });
   });
@@ -61,7 +61,7 @@ void main() async {
       final url = 'http://eu.httpbin.org/digest-auth/auth/user/passwd';
       client = DigestAuthClient('user', 'passwd');
 
-      var response = await client.get(url);
+      var response = await client.get(Uri.parse(url));
       expect(response.statusCode == 200, isTrue);
     });
 
@@ -69,7 +69,7 @@ void main() async {
       final url = 'https://eu.httpbin.org/digest-auth/auth/user/passwd';
       client = DigestAuthClient('user', 'passwd');
 
-      var response = await client.get(url);
+      var response = await client.get(Uri.parse(url));
       expect(response.statusCode == 200, isTrue);
     });
 
@@ -77,7 +77,7 @@ void main() async {
       final url = 'http://jigsaw.w3.org/HTTP/Digest/';
       client = DigestAuthClient('guest', 'guest');
 
-      var response = await client.get(url);
+      var response = await client.get(Uri.parse(url));
       expect(response.statusCode, 200);
     });
 
@@ -85,7 +85,7 @@ void main() async {
       final url = 'https://jigsaw.w3.org/HTTP/Digest/';
       client = DigestAuthClient('guest', 'guest');
 
-      var response = await client.get(url);
+      var response = await client.get(Uri.parse(url));
       expect(response.statusCode, 200);
     });
   });
@@ -98,28 +98,28 @@ void main() async {
     test('httpbin HTTPS Basic', () async {
       final url = 'https://eu.httpbin.org/basic-auth/user/passwd';
       final client = NegotiateAuthClient('user', 'passwd');
-      final response = await client.get(url);
+      final response = await client.get(Uri.parse(url));
       expect(response.statusCode, 200);
     });
 
     test('httpbin HTTPS Digest', () async {
       final url = 'https://eu.httpbin.org/digest-auth/auth/user/passwd';
       final client = NegotiateAuthClient('user', 'passwd');
-      final response = await client.get(url);
+      final response = await client.get(Uri.parse(url));
       expect(response.statusCode, 200);
     });
 
     test('jigsaw HTTP Basic', () async {
       final url = 'http://jigsaw.w3.org/HTTP/Basic/';
       final client = NegotiateAuthClient('guest', 'guest');
-      final response = await client.get(url);
+      final response = await client.get(Uri.parse(url));
       expect(response.statusCode, 200);
     });
 
     test('jigsaw HTTP Digest', () async {
       final url = 'http://jigsaw.w3.org/HTTP/Digest/';
       final client = NegotiateAuthClient('guest', 'guest');
-      final response = await client.get(url + rand);
+      final response = await client.get(Uri.parse(url + rand));
       expect(response.statusCode, 200);
     });
   });
@@ -133,11 +133,11 @@ void main() async {
       final url = 'http://httpbin.org/digest-auth/auth/foo/bar';
       final count = _CountingHttpClient();
       final client = NegotiateAuthClient('foo', 'bar', inner: count);
-      final response = await client.get(url);
+      final response = await client.get(Uri.parse(url));
       expect(response.statusCode, 200);
       expect(count.requestCount, 2);
       // lets try a second request.
-      final response2 = await client.get(url);
+      final response2 = await client.get(Uri.parse(url));
       expect(response2.statusCode, 200);
       expect(count.requestCount, 3);
     });
