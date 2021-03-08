@@ -23,8 +23,8 @@ enum AuthenticationScheme {
   Digest,
 }
 
-Map<String, String> splitAuthenticateHeader(String header) {
-  if (header == null || !header.startsWith('Digest ')) {
+Map<String, String>? splitAuthenticateHeader(String header) {
+  if (!header.startsWith('Digest ')) {
     return null; // TODO exception?
   }
   header = header.substring(7); // remove 'Digest '
@@ -74,8 +74,8 @@ String _formatNonceCount(int nc) {
   return nc.toRadixString(16).padLeft(8, '0');
 }
 
-String _computeHA1(String realm, String algorithm, String username,
-    String password, String nonce, String cnonce) {
+String _computeHA1(String realm, String? algorithm, String username,
+    String password, String? nonce, String? cnonce) {
   if (algorithm == null || algorithm == 'MD5') {
     final token1 = '$username:$realm:$password';
     return md5Hash(token1);
@@ -89,20 +89,20 @@ String _computeHA1(String realm, String algorithm, String username,
   }
 }
 
-Map<String, String> computeResponse(
+Map<String, String?> computeResponse(
     String method,
     String path,
     String body,
-    String algorithm,
-    String qop,
-    String opaque,
+    String? algorithm,
+    String? qop,
+    String? opaque,
     String realm,
-    String cnonce,
-    String nonce,
+    String? cnonce,
+    String? nonce,
     int nc,
     String username,
     String password) {
-  var ret = <String, String>{};
+  var ret = <String, String?>{};
 
   final ha1 = _computeHA1(realm, algorithm, username, password, nonce, cnonce);
 
@@ -123,7 +123,9 @@ Map<String, String> computeResponse(
   ret['realm'] = realm;
   ret['nonce'] = nonce;
   ret['uri'] = path;
-  ret['qop'] = qop;
+  if (qop!=null) {
+    ret['qop'] = qop;
+  }
   ret['nc'] = nonceCount;
   ret['cnonce'] = cnonce;
   if (opaque != null) {
@@ -147,11 +149,11 @@ class DigestAuth {
   String password;
 
   // must get from first response
-  String _algorithm;
-  String _qop;
-  String _realm;
-  String _nonce;
-  String _opaque;
+  String? _algorithm;
+  String? _qop;
+  String? _realm;
+  String? _nonce;
+  String? _opaque;
 
   int _nc = 0; // request counter
 
@@ -173,7 +175,7 @@ class DigestAuth {
 
     // after the first request we have the nonce, so we can provide credentials
     final authValues = computeResponse(method, path, '', _algorithm, _qop,
-        _opaque, _realm, _cnonce, _nonce, _nc, username, password);
+        _opaque, _realm!, _cnonce, _nonce, _nc, username, password);
     final authValuesString = authValues.entries
         .where((e) => e.value != null)
         .map((e) => [e.key, '="', e.value, '"'].join(''))
@@ -183,14 +185,17 @@ class DigestAuth {
     return authString;
   }
 
-  void initFromAuthenticateHeader(String authInfo) {
+  void initFromAuthenticateHeader(String/*!*/ authInfo) {
+
     final values = splitAuthenticateHeader(authInfo);
-    _algorithm = values['algorithm'] ?? _algorithm;
-    _qop = values['qop'] ?? _qop;
-    _realm = values['realm'] ?? _realm;
-    _nonce = values['nonce'] ?? _nonce;
-    _opaque = values['opaque'] ?? _opaque;
-    _nc = 0;
+    if (values != null) {
+      _algorithm = values['algorithm'] ?? _algorithm;
+      _qop = values['qop'] ?? _qop;
+      _realm = values['realm'] ?? _realm;
+      _nonce = values['nonce'] ?? _nonce;
+      _opaque = values['opaque'] ?? _opaque;
+      _nc = 0;
+    }
   }
 
   bool isReady() {
@@ -198,7 +203,7 @@ class DigestAuth {
   }
 }
 
-AuthenticationScheme pickSchemeFromAuthenticateHeader(String wwwAuthHeader) {
+AuthenticationScheme? pickSchemeFromAuthenticateHeader(String wwwAuthHeader) {
   final components = wwwAuthHeader
       .split(RegExp(r'[, ]'))
       .where((s) => s.isNotEmpty)

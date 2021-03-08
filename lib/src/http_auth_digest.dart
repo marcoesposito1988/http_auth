@@ -20,7 +20,7 @@ class DigestAuthClient extends http.BaseClient {
   /// Constructs a new [BasicAuthClient] which will use the provided [username]
   /// and [password] for all subsequent requests.
   DigestAuthClient(String username, String password,
-      {http.Client inner, String authenticationHeader})
+      {http.Client? inner, String? authenticationHeader})
       : _auth = utils.DigestAuth(username, password),
         _inner = inner ?? http.Client() {
     if (authenticationHeader != null) {
@@ -39,7 +39,7 @@ class DigestAuthClient extends http.BaseClient {
     if (response.statusCode == 401) {
       final newRequest = utils.copyRequest(request);
       final authInfo =
-          response.headers[utils.HttpConstants.headerWwwAuthenticate];
+          response.headers[utils.HttpConstants.headerWwwAuthenticate]!;
       _auth.initFromAuthenticateHeader(authInfo);
 
       newRequest.headers[utils.HttpConstants.headerAuthorization] =
