@@ -1,3 +1,7 @@
+## 1.0.0
+
+- Migrated to sound null safety
+
 ## 0.3.2
 
 - Updated dependencies for compatibility with Flutter2
