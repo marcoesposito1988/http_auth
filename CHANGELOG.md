@@ -1,3 +1,7 @@
+## 1.0.1
+
+- Code linting
+
 ## 1.0.0
 
 - Migrated to sound null safety
