@@ -123,7 +123,7 @@ Map<String, String?> computeResponse(
   ret['realm'] = realm;
   ret['nonce'] = nonce;
   ret['uri'] = path;
-  if (qop!=null) {
+  if (qop != null) {
     ret['qop'] = qop;
   }
   ret['nc'] = nonceCount;
@@ -185,8 +185,7 @@ class DigestAuth {
     return authString;
   }
 
-  void initFromAuthenticateHeader(String/*!*/ authInfo) {
-
+  void initFromAuthenticateHeader(String /*!*/ authInfo) {
     final values = splitAuthenticateHeader(authInfo);
     if (values != null) {
       _algorithm = values['algorithm'] ?? _algorithm;
