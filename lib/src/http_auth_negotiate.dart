@@ -26,10 +26,10 @@ class NegotiateAuthClient extends http.BaseClient {
       final authHeader = response.headers[HttpConstants.headerWwwAuthenticate]!;
       final scheme = pickSchemeFromAuthenticateHeader(authHeader);
       switch (scheme) {
-        case AuthenticationScheme.Basic:
+        case AuthenticationScheme.basic:
           _authClient = BasicAuthClient(_username, _password, inner: _inner);
           break;
-        case AuthenticationScheme.Digest:
+        case AuthenticationScheme.digest:
           _authClient = DigestAuthClient(_username, _password,
               inner: _inner, authenticationHeader: authHeader);
           break;

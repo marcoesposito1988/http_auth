@@ -19,8 +19,8 @@ class HttpConstants {
 }
 
 enum AuthenticationScheme {
-  Basic,
-  Digest,
+  basic,
+  digest,
 }
 
 Map<String, String>? splitAuthenticateHeader(String header) {
@@ -119,7 +119,7 @@ Map<String, String?> computeResponse(
     String password) {
   var ret = <String, String?>{};
 
-  algorithm ??= "MD5";
+  algorithm ??= 'MD5';
   final ha1 = _computeHA1(realm, algorithm, username, password, nonce, cnonce);
 
   String ha2;
@@ -206,14 +206,14 @@ class DigestAuth {
   }
 
   String getAuthString(String method, Uri url) {
-    final _cnonce = _computeNonce();
+    final cnonce = _computeNonce();
     _nc += 1;
     // if url has query parameters, append query to path
-    final path = url.hasQuery ? url.path + '?' + url.query : url.path;
+    final path = url.hasQuery ? '${url.path}?${url.query}' : url.path;
 
     // after the first request we have the nonce, so we can provide credentials
     final authValues = computeResponse(method, path, '', _algorithm, _qop,
-        _opaque, _realm!, _cnonce, _nonce, _nc, username, password);
+        _opaque, _realm!, cnonce, _nonce, _nc, username, password);
     final authValuesString = authValues.entries
         .where((e) => e.value != null)
         .map((e) => [e.key, '="', e.value, '"'].join(''))
@@ -247,10 +247,10 @@ AuthenticationScheme? pickSchemeFromAuthenticateHeader(String wwwAuthHeader) {
       .map((e) => e.toLowerCase())
       .toList();
   if (components.any((element) => element == HttpConstants.authSchemeDigest)) {
-    return AuthenticationScheme.Digest;
+    return AuthenticationScheme.digest;
   }
   if (components.any((element) => element == HttpConstants.authSchemeBasic)) {
-    return AuthenticationScheme.Basic;
+    return AuthenticationScheme.basic;
   }
   return null;
 }
