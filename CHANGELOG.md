@@ -1,3 +1,8 @@
+## 1.0.2
+
+- Updated http dependency
+- More code linting
+ 
 ## 1.0.1
 
 - Code linting
