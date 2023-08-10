@@ -44,4 +44,10 @@ class NegotiateAuthClient extends http.BaseClient {
 
     return response;
   }
+
+  @override
+  void close() {
+    _inner.close();
+    _authClient?.close();
+  }
 }
