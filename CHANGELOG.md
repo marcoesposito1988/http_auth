@@ -1,3 +1,7 @@
+## 1.0.3
+
+- Added `close()` method to `NegotiateAuthClient` (thanks to @KrohnMi)
+ 
 ## 1.0.2
 
 - Updated http dependency
