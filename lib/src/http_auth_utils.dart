@@ -124,7 +124,7 @@ Map<String, String?> computeResponse(
 
   String ha2;
 
-  if (algorithm.startsWith('MD5') ){
+  if (algorithm.startsWith('MD5')) {
     if (qop == 'auth-int') {
       final bodyHash = md5Hash(body);
       final token2 = '$method:$path:$bodyHash';
@@ -134,7 +134,7 @@ Map<String, String?> computeResponse(
       final token2 = '$method:$path';
       ha2 = md5Hash(token2);
     }
-  }else {
+  } else {
     if (qop == 'auth-int') {
       final bodyHash = sha256Hash(body);
       final token2 = '$method:$path:$bodyHash';
@@ -161,7 +161,7 @@ Map<String, String?> computeResponse(
   }
   ret['algorithm'] = algorithm;
 
-  if (algorithm.startsWith('MD5') ) {
+  if (algorithm.startsWith('MD5')) {
     if (qop == null) {
       final token3 = '$ha1:$nonce:$ha2';
       ret['response'] = md5Hash(token3);
@@ -169,7 +169,7 @@ Map<String, String?> computeResponse(
       final token3 = '$ha1:$nonce:$nonceCount:$cnonce:$qop:$ha2';
       ret['response'] = md5Hash(token3);
     }
-  }else {
+  } else {
     if (qop == null) {
       final token3 = '$ha1:$nonce:$ha2';
       ret['response'] = sha256Hash(token3);
