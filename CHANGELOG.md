@@ -1,3 +1,7 @@
+## 1.0.4
+
+- Fixed quoting of some HTTP headers (thanks to @aedalzotto)
+ 
 ## 1.0.3
 
 - Added `close()` method to `NegotiateAuthClient` (thanks to @KrohnMi)

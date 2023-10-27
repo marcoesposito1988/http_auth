@@ -1,6 +1,6 @@
 name: http_auth
 description: Dart http middleware for HTTP Basic and Digest authentication
-version: 1.0.3
+version: 1.0.4
 homepage: https://github.com/marcoesposito1988/http_auth
 
 environment:
@@ -13,4 +13,4 @@ dependencies:
 
 dev_dependencies:
   test: '>=1.0.0 <2.0.0'
-  lints: ^2.1.1
+  lints: ^3.0.0
