@@ -216,7 +216,13 @@ class DigestAuth {
         _opaque, _realm!, cnonce, _nonce, _nc, username, password);
     final authValuesString = authValues.entries
         .where((e) => e.value != null)
-        .map((e) => [e.key, '="', e.value, '"'].join(''))
+        .map((e) => [
+          e.key, 
+          '=', 
+          ['algorithm', 'qop', 'nc'].contains(e.key) ? '' : '"', 
+          e.value, 
+          ['algorithm', 'qop', 'nc'].contains(e.key) ? '' : '"'
+        ].join(''))
         .toList()
         .join(', ');
     final authString = 'Digest $authValuesString';
