@@ -23,19 +23,88 @@ enum AuthenticationScheme {
   digest,
 }
 
+List<String> _splitAuthenticateHeaderParts(String header) {
+  final parts = <String>[];
+  final buffer = StringBuffer();
+
+  var inQuotes = false;
+  var escaped = false;
+
+  for (var i = 0; i < header.length; i++) {
+    final char = header[i];
+
+    if (escaped) {
+      buffer.write(char);
+      escaped = false;
+      continue;
+    }
+
+    if (char == r'\') {
+      buffer.write(char);
+      escaped = true;
+      continue;
+    }
+
+    if (char == '"') {
+      inQuotes = !inQuotes;
+      buffer.write(char);
+      continue;
+    }
+
+    if (char == ',' && !inQuotes) {
+      final part = buffer.toString().trim();
+      if (part.isNotEmpty) {
+        parts.add(part);
+      }
+      buffer.clear();
+      continue;
+    }
+
+    buffer.write(char);
+  }
+
+  final part = buffer.toString().trim();
+  if (part.isNotEmpty) {
+    parts.add(part);
+  }
+
+  return parts;
+}
+
+String _unquoteHeaderValue(String value) {
+  final trimmed = value.trim();
+
+  if (trimmed.length >= 2 && trimmed.startsWith('"') && trimmed.endsWith('"')) {
+    return trimmed.substring(1, trimmed.length - 1);
+  }
+
+  return trimmed;
+}
+
 Map<String, String>? splitAuthenticateHeader(String header) {
-  if (!header.startsWith('Digest ')) {
-    return null; // TODO exception?
-  }
-  header = header.substring(7); // remove 'Digest '
+  final trimmed = header.trim();
 
-  var ret = <String, String>{};
-
-  final components = header.split(',').map((token) => token.trim());
-  for (var component in components) {
-    final kv = component.split('=');
-    ret[kv[0]] = kv.getRange(1, kv.length).join('=').replaceAll('"', '');
+  if (!trimmed.toLowerCase().startsWith('digest ')) {
+    return null;
   }
+
+  final digestHeader = trimmed.substring('Digest '.length);
+  final ret = <String, String>{};
+
+  final components = _splitAuthenticateHeaderParts(digestHeader);
+  for (final component in components) {
+    final separatorIndex = component.indexOf('=');
+
+    if (separatorIndex <= 0) {
+      continue;
+    }
+
+    final key = component.substring(0, separatorIndex).trim();
+    final value = component.substring(separatorIndex + 1);
+
+    ret[key] = _unquoteHeaderValue(value);
+  }
+
   return ret;
 }
 
@@ -233,7 +302,24 @@ class DigestAuth {
     final values = splitAuthenticateHeader(authInfo);
     if (values != null) {
       _algorithm = values['algorithm'] ?? _algorithm;
-      _qop = values['qop'] ?? _qop;
+
+      final qop = values['qop'];
+      if (qop != null) {
+        final qopOptions = qop
+            .split(',')
+            .map((value) => value.trim())
+            .where((value) => value.isNotEmpty)
+            .toList();
+
+        if (qopOptions.contains('auth')) {
+          _qop = 'auth';
+        } else if (qopOptions.contains('auth-int')) {
+          _qop = 'auth-int';
+        } else {
+          _qop = qopOptions.isNotEmpty ? qopOptions.first : _qop;
+        }
+      }
+
       _realm = values['realm'] ?? _realm;
       _nonce = values['nonce'] ?? _nonce;
       _opaque = values['opaque'] ?? _opaque;

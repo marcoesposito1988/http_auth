@@ -23,7 +23,12 @@ class NegotiateAuthClient extends http.BaseClient {
     final response = await _inner.send(request);
 
     if (response.statusCode == 401) {
-      final authHeader = response.headers[HttpConstants.headerWwwAuthenticate]!;
+      final authHeader = response.headers[HttpConstants.headerWwwAuthenticate];
+      if (authHeader == null || authHeader.trim().isEmpty) {
+        throw StateError(
+            'Received 401 Unauthorized without a WWW-Authenticate header.');
+      }
+
       final scheme = pickSchemeFromAuthenticateHeader(authHeader);
       switch (scheme) {
         case AuthenticationScheme.basic:
