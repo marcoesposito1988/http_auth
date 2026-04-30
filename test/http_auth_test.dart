@@ -37,7 +37,8 @@ void main() async {
       client = BasicAuthClient('guest', 'guest');
 
       var response = await client.get(Uri.parse(url));
-      expect(response.statusCode, 200);
+      var reason = response.reasonPhrase ?? '';
+      expect(response.statusCode, 200, reason: reason);
     });
 
     test('jigsaw HTTPS', () async {
@@ -45,7 +46,8 @@ void main() async {
       client = BasicAuthClient('guest', 'guest');
 
       var response = await client.get(Uri.parse(url));
-      expect(response.statusCode, 200);
+      var reason = response.reasonPhrase ?? '';
+      expect(response.statusCode, 200, reason: reason);
     });
   });
 
@@ -77,7 +79,8 @@ void main() async {
       client = DigestAuthClient('guest', 'guest');
 
       var response = await client.get(Uri.parse(url));
-      expect(response.statusCode, 200);
+      var reason = response.reasonPhrase ?? '';
+      expect(response.statusCode, 200, reason: reason);
     });
 
     test('jigsaw HTTPS', () async {
@@ -85,7 +88,8 @@ void main() async {
       client = DigestAuthClient('guest', 'guest');
 
       var response = await client.get(Uri.parse(url));
-      expect(response.statusCode, 200);
+      var reason = response.reasonPhrase ?? '';
+      expect(response.statusCode, 200, reason: reason);
     });
   });
 
@@ -112,14 +116,16 @@ void main() async {
       final url = 'http://jigsaw.w3.org/HTTP/Basic/';
       final client = NegotiateAuthClient('guest', 'guest');
       final response = await client.get(Uri.parse(url));
-      expect(response.statusCode, 200);
+      var reason = response.reasonPhrase ?? '';
+      expect(response.statusCode, 200, reason: reason);
     });
 
     test('jigsaw HTTP Digest', () async {
       final url = 'http://jigsaw.w3.org/HTTP/Digest/';
       final client = NegotiateAuthClient('guest', 'guest');
       final response = await client.get(Uri.parse(url + rand));
-      expect(response.statusCode, 200);
+      var reason = response.reasonPhrase ?? '';
+      expect(response.statusCode, 200, reason: reason);
     });
   });
 
