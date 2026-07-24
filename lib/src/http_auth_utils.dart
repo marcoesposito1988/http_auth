@@ -124,8 +124,8 @@ String md5Hash(String data) {
 
 // from http_retry
 /// Returns a copy of [original].
-http.Request _copyNormalRequest(http.Request original) {
-  var request = http.Request(original.method, original.url);
+http.Request _copyNormalRequest(http.Request original, [Uri? newUrl]) {
+  var request = http.Request(original.method, newUrl ?? original.url);
   request.followRedirects = original.followRedirects;
   request.headers.addAll(original.headers);
   request.maxRedirects = original.maxRedirects;
@@ -135,9 +135,9 @@ http.Request _copyNormalRequest(http.Request original) {
   return request;
 }
 
-http.BaseRequest copyRequest(http.BaseRequest original) {
+http.BaseRequest copyRequest(http.BaseRequest original, [Uri? newUrl]) {
   if (original is http.Request) {
-    return _copyNormalRequest(original);
+    return _copyNormalRequest(original, newUrl);
   } else {
     throw UnimplementedError(
         'cannot handle yet requests of type ${original.runtimeType}');

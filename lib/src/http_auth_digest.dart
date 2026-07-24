@@ -37,7 +37,7 @@ class DigestAuthClient extends http.BaseClient {
     final response = await _inner.send(request);
 
     if (response.statusCode == 401) {
-      final newRequest = utils.copyRequest(request);
+      final newRequest = utils.copyRequest(request, response.request?.url);
       final authInfo =
           response.headers[utils.HttpConstants.headerWwwAuthenticate]!;
       _auth.initFromAuthenticateHeader(authInfo);
