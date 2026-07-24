@@ -1,3 +1,7 @@
+## 1.0.5
+
+- Fixed handling of some redirects
+ 
 ## 1.0.4
 
 - Fixed quoting of some HTTP headers (thanks to @aedalzotto)
