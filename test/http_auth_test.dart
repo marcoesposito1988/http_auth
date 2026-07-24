@@ -8,133 +8,79 @@ import 'package:http_auth/http_auth.dart';
 import 'package:http_auth/src/http_auth_utils.dart';
 import 'package:test/test.dart';
 
-void main() async {
+void main() {
   group('Basic Auth', () {
     http.BaseClient client;
 
-//    setUp(() {
-//
-//    });
-
-    test('httpbin HTTP', () async {
-      final url = 'http://eu.httpbin.org/basic-auth/user/passwd';
+    test('HTTP', () async {
+      final url = 'http://httpbin.org/basic-auth/user/passwd';
       client = BasicAuthClient('user', 'passwd');
 
       var response = await client.get(Uri.parse(url));
-      expect(response.statusCode == 200, isTrue);
+      expect(response.statusCode, 200);
     });
 
-    test('httpbin HTTPS', () async {
-      final url = 'https://eu.httpbin.org/basic-auth/user/passwd';
+    test('HTTPS', () async {
+      final url = 'https://httpbin.org/basic-auth/user/passwd';
       client = BasicAuthClient('user', 'passwd');
 
       var response = await client.get(Uri.parse(url));
-      expect(response.statusCode == 200, isTrue);
-    });
-
-    test('jigsaw HTTP', () async {
-      final url = 'http://jigsaw.w3.org/HTTP/Basic/';
-      client = BasicAuthClient('guest', 'guest');
-
-      var response = await client.get(Uri.parse(url));
-      var reason = response.reasonPhrase ?? '';
-      expect(response.statusCode, 200, reason: reason);
-    });
-
-    test('jigsaw HTTPS', () async {
-      final url = 'https://jigsaw.w3.org/HTTP/Basic/';
-      client = BasicAuthClient('guest', 'guest');
-
-      var response = await client.get(Uri.parse(url));
-      var reason = response.reasonPhrase ?? '';
-      expect(response.statusCode, 200, reason: reason);
+      expect(response.statusCode, 200);
     });
   });
 
   group('Digest Auth', () {
     http.BaseClient client;
 
-//    setUp(() {
-//
-//    });
-
-    test('httpbin HTTP', () async {
-      final url = 'http://eu.httpbin.org/digest-auth/auth/user/passwd';
+    test('HTTP', () async {
+      final url = 'http://httpbin.org/digest-auth/auth/user/passwd';
       client = DigestAuthClient('user', 'passwd');
 
       var response = await client.get(Uri.parse(url));
-      expect(response.statusCode == 200, isTrue);
+      expect(response.statusCode, 200);
     });
 
-    test('httpbin HTTPS', () async {
-      final url = 'https://eu.httpbin.org/digest-auth/auth/user/passwd';
+    test('HTTPS', () async {
+      final url = 'https://httpbin.org/digest-auth/auth/user/passwd';
       client = DigestAuthClient('user', 'passwd');
 
       var response = await client.get(Uri.parse(url));
-      expect(response.statusCode == 200, isTrue);
-    });
-
-    test('jigsaw HTTP', () async {
-      final url = 'http://jigsaw.w3.org/HTTP/Digest/';
-      client = DigestAuthClient('guest', 'guest');
-
-      var response = await client.get(Uri.parse(url));
-      var reason = response.reasonPhrase ?? '';
-      expect(response.statusCode, 200, reason: reason);
-    });
-
-    test('jigsaw HTTPS', () async {
-      final url = 'https://jigsaw.w3.org/HTTP/Digest/';
-      client = DigestAuthClient('guest', 'guest');
-
-      var response = await client.get(Uri.parse(url));
-      var reason = response.reasonPhrase ?? '';
-      expect(response.statusCode, 200, reason: reason);
+      expect(response.statusCode, 200);
     });
   });
 
   group('Automatic negotiation', () {
-//    setUp(() {
-//
-//    });
-
-    test('httpbin HTTPS Basic', () async {
-      final url = 'https://eu.httpbin.org/basic-auth/user/passwd';
+    test('HTTPS Basic', () async {
+      final url = 'https://httpbin.org/basic-auth/user/passwd';
       final client = NegotiateAuthClient('user', 'passwd');
       final response = await client.get(Uri.parse(url));
       expect(response.statusCode, 200);
     });
 
-    test('httpbin HTTPS Digest', () async {
-      final url = 'https://eu.httpbin.org/digest-auth/auth/user/passwd';
+    test('HTTPS Digest', () async {
+      final url = 'https://httpbin.org/digest-auth/auth/user/passwd';
       final client = NegotiateAuthClient('user', 'passwd');
       final response = await client.get(Uri.parse(url));
       expect(response.statusCode, 200);
     });
 
-    test('jigsaw HTTP Basic', () async {
-      final url = 'http://jigsaw.w3.org/HTTP/Basic/';
+    test('HTTP Basic', () async {
+      final url = 'http://httpbin.org/basic-auth/guest/guest';
       final client = NegotiateAuthClient('guest', 'guest');
       final response = await client.get(Uri.parse(url));
-      var reason = response.reasonPhrase ?? '';
-      expect(response.statusCode, 200, reason: reason);
+      expect(response.statusCode, 200);
     });
 
-    test('jigsaw HTTP Digest', () async {
-      final url = 'http://jigsaw.w3.org/HTTP/Digest/';
+    test('HTTP Digest', () async {
+      final url = 'http://httpbin.org/digest-auth/auth/guest/guest';
       final client = NegotiateAuthClient('guest', 'guest');
-      final response = await client.get(Uri.parse(url + rand));
-      var reason = response.reasonPhrase ?? '';
-      expect(response.statusCode, 200, reason: reason);
+      final response = await client.get(Uri.parse(url));
+      expect(response.statusCode, 200);
     });
   });
 
   group('Automatic negotiation, multiple requests', () {
-//    setUp(() {
-//
-//    });
-
-    test('httpbin HTTP Digest', () async {
+    test('Digest', () async {
       final url = 'http://httpbin.org/digest-auth/auth/foo/bar';
       final count = _CountingHttpClient();
       final client = NegotiateAuthClient('foo', 'bar', inner: count);
@@ -241,8 +187,6 @@ void main() async {
     });
   });
 }
-
-String get rand => '?t=${DateTime.now().millisecondsSinceEpoch}';
 
 class _CountingHttpClient extends http.BaseClient {
   final _inner = http.Client();
